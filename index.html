@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b6b6b">
+  <meta name="description" content="Infection Control Hub - quick access to infection prevention and control information.">
+  <title>Infection Control Hub</title>
+  <style>
+    :root{
+      --primary:#0b6b6b;
+      --primary-dark:#084f4f;
+      --accent:#eaf7f7;
+      --danger:#b42318;
+      --danger-bg:#fff1f0;
+      --text:#173333;
+      --muted:#637777;
+      --bg:#f5f8f8;
+      --card:#ffffff;
+      --border:#dbe7e7;
+      --shadow:0 8px 24px rgba(14,55,55,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    button,a{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh}
+    header{
+      background:linear-gradient(135deg,var(--primary),#159090);
+      color:#fff;
+      padding:18px 16px 24px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      box-shadow:0 4px 18px rgba(0,0,0,.12);
+    }
+    .header-inner{
+      max-width:760px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:52px;height:52px;border-radius:14px;
+      background:rgba(255,255,255,.16);
+      display:grid;place-items:center;
+      font-size:28px;
+      flex:0 0 auto;
+    }
+    .brand h1{font-size:20px;margin:0 0 2px}
+    .brand p{font-size:12px;margin:0;opacity:.9}
+    main{max-width:760px;margin:auto;padding:20px 16px 50px}
+    .notice{
+      background:#fff;
+      border:1px solid var(--border);
+      border-left:5px solid var(--primary);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:18px;
+      box-shadow:var(--shadow);
+      font-size:13px;
+    }
+    .notice strong{display:block;margin-bottom:3px}
+    .section-title{
+      font-size:17px;
+      margin:24px 0 10px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    .tile{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:16px;
+      min-height:120px;
+      text-align:left;
+      box-shadow:var(--shadow);
+      transition:.15s ease;
+      color:var(--text);
+    }
+    .tile:hover{transform:translateY(-2px)}
+    .tile .icon{font-size:29px;display:block;margin-bottom:8px}
+    .tile strong{display:block;font-size:15px}
+    .tile span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .emergency{
+      margin-top:14px;
+      background:var(--danger-bg);
+      border:1px solid #f3c6c2;
+      color:#6e211b;
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+    .emergency button{
+      width:100%;
+      border:0;
+      border-radius:13px;
+      padding:14px;
+      margin-top:10px;
+      background:var(--danger);
+      color:#fff;
+      font-weight:700;
+    }
+    .page{display:none}
+    .page.active{display:block}
+    .back{
+      border:0;background:transparent;color:var(--primary);
+      padding:4px 0 12px;font-weight:700;
+    }
+    .page h2{margin:6px 0 5px;font-size:24px}
+    .page .subtitle{color:var(--muted);margin:0 0 18px}
+    .card{
+      background:#fff;border:1px solid var(--border);
+      border-radius:var(--radius);padding:17px;margin-bottom:12px;
+      box-shadow:var(--shadow);
+    }
+    .card h3{font-size:16px;margin:0 0 8px}
+    .card p{margin:6px 0}
+    .steps{counter-reset:step;list-style:none;padding:0;margin:0}
+    .steps li{
+      counter-increment:step;
+      display:flex;gap:12px;align-items:flex-start;
+      padding:10px 0;border-bottom:1px solid #edf2f2;
+    }
+    .steps li:last-child{border-bottom:0}
+    .steps li:before{
+      content:counter(step);
+      width:28px;height:28px;min-width:28px;
+      border-radius:50%;background:var(--accent);
+      color:var(--primary);display:grid;place-items:center;
+      font-weight:700;font-size:13px;
+    }
+    .checklist{padding-left:20px;margin:8px 0}
+    .checklist li{margin:7px 0}
+    .callout{
+      background:var(--accent);
+      border-radius:13px;padding:13px;margin-top:10px;
+    }
+    .danger-callout{
+      background:var(--danger-bg);
+      border:1px solid #f3c6c2;
+      border-radius:13px;padding:13px;margin-top:10px;
+    }
+    .scenario-grid{display:grid;gap:10px}
+    .scenario{
+      width:100%;text-align:left;border:1px solid var(--border);
+      background:#fff;border-radius:14px;padding:14px;
+    }
+    .scenario strong{display:block}
+    .scenario span{font-size:12px;color:var(--muted)}
+    .contact-btn{
+      display:block;text-align:center;text-decoration:none;
+      background:var(--primary);color:#fff;padding:13px;
+      border-radius:12px;font-weight:700;margin-top:10px;
+    }
+    footer{
+      max-width:760px;margin:auto;padding:0 16px 28px;
+      color:var(--muted);font-size:11px;text-align:center;
+    }
+    .small{font-size:12px;color:var(--muted)}
+    .tag{
+      display:inline-block;background:var(--accent);color:var(--primary);
+      padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;
+      margin-bottom:7px;
+    }
+    @media(max-width:420px){
+      .grid{grid-template-columns:1fr 1fr;gap:9px}
+      .tile{padding:13px;min-height:112px}
+      .tile .icon{font-size:25px}
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <div class="header-inner">
+    <div class="logo">🦠</div>
+    <div class="brand">
+      <h1>Infection Control Hub</h1>
+      <p>Quick access for healthcare staff</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section id="home" class="page active">
+    <div class="notice">
+      <strong>Quick Infection Control Information</strong>
+      Use this hub for quick reference. Always follow your facility's approved SOP, current guidelines and escalation pathway.
+    </div>
+
+    <h2 class="section-title">Quick Access</h2>
+    <div class="grid">
+      <button class="tile" onclick="showPage('hand')">
+        <span class="icon">🧼</span>
+        <strong>Hand Hygiene</strong>
+        <span>5 Moments & technique</span>
+      </button>
+
+      <button class="tile" onclick="showPage('ppe')">
+        <span class="icon">😷</span>
+        <strong>PPE Guide</strong>
+        <span>Selection, donning & doffing</span>
+      </button>
+
+      <button class="tile" onclick="showPage('isolation')">
+        <span class="icon">🛡️</span>
+        <strong>Isolation</strong>
+        <span>Precautions & patient placement</span>
+      </button>
+
+      <button class="tile" onclick="showPage('needlestick')">
+        <span class="icon">🚨</span>
+        <strong>Needlestick</strong>
+        <span>Exposure first actions</span>
+      </button>
+
+      <button class="tile" onclick="showPage('cleaning')">
+        <span class="icon">🧹</span>
+        <strong>Cleaning</strong>
+        <span>Spill & environmental cleaning</span>
+      </button>
+
+      <button class="tile" onclick="showPage('sop')">
+        <span class="icon">📚</span>
+        <strong>SOP & Guidelines</strong>
+        <span>Approved documents & links</span>
+      </button>
+    </div>
+
+    <div class="emergency">
+      <strong>🚨 WHAT SHOULD I DO?</strong>
+      <div class="small">Choose a situation and get the immediate steps.</div>
+      <button onclick="showPage('what')">Open Quick Decision Guide</button>
+    </div>
+
+    <h2 class="section-title">Need Help?</h2>
+    <div class="card">
+      <strong>Infection Control / IPC Team</strong>
+      <p class="small">Replace the details below with your facility's official contact information.</p>
+      <a class="contact-btn" href="tel:+60000000000">📞 Call IPC Team</a>
+    </div>
+  </section>
+
+  <!-- HAND HYGIENE -->
+  <section id="hand" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>🧼 Hand Hygiene</h2>
+    <p class="subtitle">Use the method required by your facility SOP.</p>
+
+    <div class="card">
+      <span class="tag">5 MOMENTS</span>
+      <ol class="steps">
+        <li>Before touching a patient.</li>
+        <li>Before a clean/aseptic procedure.</li>
+        <li>After body fluid exposure risk.</li>
+        <li>After touching a patient.</li>
+        <li>After touching the patient's surroundings.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Choose the method</h3>
+      <ul class="checklist">
+        <li>Use alcohol-based hand rub when hands are not visibly soiled and according to facility policy.</li>
+        <li>Use soap and water when hands are visibly soiled and in situations specified by your facility policy.</li>
+        <li>Keep nails and hands appropriate for clinical practice according to local policy.</li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <strong>Remember:</strong> Gloves do not replace hand hygiene.
+    </div>
+  </section>
+
+  <!-- PPE -->
+  <section id="ppe" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>😷 PPE Guide</h2>
+    <p class="subtitle">Select PPE based on the anticipated exposure and the required precautions.</p>
+
+    <div class="card">
+      <h3>Before entering the patient area</h3>
+      <ol class="steps">
+        <li>Assess the task and expected exposure.</li>
+        <li>Check the required isolation/precaution category.</li>
+        <li>Perform hand hygiene.</li>
+        <li>Select the appropriate PPE.</li>
+        <li>Put on PPE in the sequence required by your facility SOP.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Before removing PPE</h3>
+      <ul class="checklist">
+        <li>Identify contaminated surfaces.</li>
+        <li>Avoid touching your face.</li>
+        <li>Remove PPE using the approved sequence.</li>
+        <li>Perform hand hygiene at the required points.</li>
+      </ul>
+    </div>
+
+    <div class="danger-callout">
+      <strong>Important:</strong> Respiratory protection and other PPE requirements depend on the exposure risk and local isolation policy.
+    </div>
+  </section>
+
+  <!-- ISOLATION -->
+  <section id="isolation" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>🛡️ Isolation Precautions</h2>
+    <p class="subtitle">Follow your facility's current isolation signage and SOP.</p>
+
+    <div class="card">
+      <h3>When isolation is suspected/required</h3>
+      <ol class="steps">
+        <li>Recognise the suspected infection or transmission risk.</li>
+        <li>Apply the required precautions as soon as indicated.</li>
+        <li>Use appropriate patient placement and signage.</li>
+        <li>Use PPE according to the precaution and task.</li>
+        <li>Communicate the precautions during handover and transfer.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Transport</h3>
+      <ul class="checklist">
+        <li>Confirm whether transport is clinically necessary.</li>
+        <li>Inform the receiving area about required precautions.</li>
+        <li>Apply appropriate measures during transport.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- NEEDLESTICK -->
+  <section id="needlestick" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>🚨 Needlestick / Exposure</h2>
+    <p class="subtitle">For occupational exposure to blood or body fluids. Follow your facility's exposure protocol.</p>
+
+    <div class="card">
+      <span class="tag">IMMEDIATE ACTION</span>
+      <ol class="steps">
+        <li>Stop the task safely.</li>
+        <li>For a sharps injury, wash the affected area promptly with soap and water. Do not aggressively scrub or squeeze the wound.</li>
+        <li>For mucous-membrane exposure, flush promptly with water or according to the facility protocol.</li>
+        <li>Report the exposure immediately to the designated supervisor/IPC/occupational health pathway.</li>
+        <li>Complete the required incident documentation and follow the clinical assessment pathway.</li>
+      </ol>
+    </div>
+
+    <div class="danger-callout">
+      <strong>Do not delay reporting.</strong>
+      Exposure assessment and any indicated post-exposure management are time-sensitive. Follow the official facility pathway.
+    </div>
+
+    <div class="card">
+      <h3>Replace with your local contacts</h3>
+      <a class="contact-btn" href="tel:+60000000000">📞 Occupational Health</a>
+      <a class="contact-btn" href="tel:+60000000000">📞 IPC / Supervisor</a>
+    </div>
+  </section>
+
+  <!-- CLEANING -->
+  <section id="cleaning" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>🧹 Cleaning & Disinfection</h2>
+    <p class="subtitle">Use only approved products, concentrations and contact times.</p>
+
+    <div class="card">
+      <h3>Routine cleaning</h3>
+      <ol class="steps">
+        <li>Perform hand hygiene and wear PPE appropriate to the task.</li>
+        <li>Prepare the approved cleaning/disinfectant product as instructed.</li>
+        <li>Clean from cleaner areas toward dirtier areas where applicable.</li>
+        <li>Respect the manufacturer's/facility's required contact time.</li>
+        <li>Dispose of waste safely and perform hand hygiene.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Blood/body fluid spill</h3>
+      <ol class="steps">
+        <li>Restrict access to the affected area.</li>
+        <li>Wear appropriate PPE.</li>
+        <li>Remove visible contamination safely using the approved procedure.</li>
+        <li>Apply the approved disinfectant according to the facility protocol.</li>
+        <li>Dispose of materials as required and perform hand hygiene.</li>
+      </ol>
+    </div>
+
+    <div class="danger-callout">
+      <strong>Important:</strong> Do not guess disinfectant concentration or contact time. Use your facility-approved product instructions.
+    </div>
+  </section>
+
+  <!-- SOP -->
+  <section id="sop" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>📚 SOP & Guidelines</h2>
+    <p class="subtitle">Put your facility-approved documents here.</p>
+
+    <div class="card">
+      <h3>Suggested document list</h3>
+      <ul class="checklist">
+        <li>Hand Hygiene Policy</li>
+        <li>Standard Precautions</li>
+        <li>Transmission-Based Precautions</li>
+        <li>PPE Policy</li>
+        <li>Sharps / Needlestick Exposure SOP</li>
+        <li>Environmental Cleaning SOP</li>
+        <li>Healthcare Waste Management SOP</li>
+        <li>Outbreak / Infection Control Alert Procedure</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>How to add your documents</h3>
+      <p class="small">Replace the example buttons below with links to your approved PDF files or your organisation's document system.</p>
+      <a class="contact-btn" href="#" onclick="alert('Replace this link with your approved SOP PDF URL.'); return false;">📄 Open Hand Hygiene SOP</a>
+      <a class="contact-btn" href="#" onclick="alert('Replace this link with your approved SOP PDF URL.'); return false;">📄 Open Needlestick SOP</a>
+    </div>
+  </section>
+
+  <!-- WHAT SHOULD I DO -->
+  <section id="what" class="page">
+    <button class="back" onclick="goHome()">← Back to Home</button>
+    <h2>🚨 What Should I Do?</h2>
+    <p class="subtitle">Choose the situation that matches what is happening now.</p>
+
+    <div class="scenario-grid">
+      <button class="scenario" onclick="showPage('needlestick')">
+        <strong>🩸 I was exposed to blood/body fluid</strong>
+        <span>Needlestick, splash or occupational exposure</span>
+      </button>
+
+      <button class="scenario" onclick="showPage('isolation')">
+        <strong>🦠 Patient may need isolation</strong>
+        <span>Check precautions and communication</span>
+      </button>
+
+      <button class="scenario" onclick="showPage('ppe')">
+        <strong>😷 I don't know what PPE to use</strong>
+        <span>Assess exposure and required precautions</span>
+      </button>
+
+      <button class="scenario" onclick="showPage('cleaning')">
+        <strong>🧹 There is a blood/body fluid spill</strong>
+        <span>Restrict access and follow cleaning protocol</span>
+      </button>
+
+      <button class="scenario" onclick="showPage('hand')">
+        <strong>🧼 I need a reminder about hand hygiene</strong>
+        <span>Review the 5 Moments</span>
+      </button>
+
+      <button class="scenario" onclick="showPage('sop')">
+        <strong>📚 I need the official SOP</strong>
+        <span>Open the approved document list</span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p><strong>Infection Control Hub</strong></p>
+  <p>Version 1.0 • Replace sample content and contacts with your facility-approved information before official deployment.</p>
+  <p>This tool is a quick reference and does not replace clinical judgement, approved SOPs, or emergency procedures.</p>
+</footer>
+
+</div>
+
+<script>
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    const target = document.getElementById(id);
+    if(target){
+      target.classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+      history.replaceState(null, '', '#' + id);
+    }
+  }
+
+  function goHome(){
+    showPage('home');
+  }
+
+  window.addEventListener('load', () => {
+    const hash = window.location.hash.replace('#','');
+    if(hash && document.getElementById(hash)){
+      showPage(hash);
+    }
+  });
+</script>
+</body>
+</html>
